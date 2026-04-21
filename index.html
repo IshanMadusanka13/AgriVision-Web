@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AgriVision – AI Driven Ecosystem For Scotch Bonnet Cultivation</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── CSS Variables ─────────────────────────────────── */
+    :root {
+      --white:       #ffffff;
+      --off-white:   #f7faf5;
+      --green-50:    #edf7ea;
+      --green-100:   #d3edcc;
+      --green-300:   #7ec87a;
+      --green-500:   #3aab44;
+      --green-700:   #1f7a28;
+      --green-900:   #0e4814;
+      --gray-100:    #f1f3f1;
+      --gray-300:    #c8d0c6;
+      --gray-500:    #7a8a76;
+      --gray-700:    #3c4a38;
+      --gray-900:    #1a221a;
+      --accent:      #2e8b57;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'DM Sans', sans-serif;
+
+      --radius:  12px;
+      --radius-lg: 20px;
+      --shadow:  0 4px 24px rgba(30,80,30,.09);
+      --shadow-lg: 0 8px 40px rgba(30,80,30,.14);
+    }
+
+    /* ─── Reset & Base ─────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--off-white);
+      color: var(--gray-900);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    /* ─── Navigation ───────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--green-100);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 68px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .nav-logo {
+      width: 36px; height: 36px;
+      background: var(--green-500);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo svg { width: 20px; height: 20px; }
+    .nav-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      color: var(--green-700);
+      letter-spacing: .02em;
+    }
+    .nav-links {
+      display: flex; gap: 6px;
+    }
+    .nav-links a {
+      font-size: .875rem; font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 100px;
+      color: var(--gray-700);
+      transition: background .2s, color .2s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      background: var(--green-50);
+      color: var(--green-700);
+    }
+
+    /* ─── Section wrapper ──────────────────────────────── */
+    section { display: none; }
+    section.active { display: block; }
+
+    /* ─── Hero ─────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: calc(100vh - 68px);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 8%;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; z-index: 0;
+      background: radial-gradient(ellipse 70% 60% at 80% 50%, var(--green-50) 0%, var(--off-white) 100%);
+    }
+    .hero-decoration {
+      position: absolute; right: 6%; top: 50%;
+      transform: translateY(-50%);
+      width: min(44vw, 480px); height: min(44vw, 480px);
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--green-100) 0%, var(--green-50) 60%, transparent 100%);
+      z-index: 0;
+    }
+    .hero-decoration::before {
+      content: '';
+      position: absolute; inset: 30px;
+      border-radius: 50%;
+      border: 2px dashed var(--green-300);
+      opacity: .5;
+      animation: spin 24s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hero-decoration-inner {
+      position: absolute; inset: 70px;
+      border-radius: 50%;
+      background: var(--green-500);
+      opacity: .08;
+    }
+
+    /* leaf blobs */
+    .blob {
+      position: absolute; border-radius: 50%;
+      background: var(--green-300);
+      opacity: .12;
+      z-index: 0;
+    }
+    .blob-1 { width: 200px; height: 200px; top: 8%; left: 60%; }
+    .blob-2 { width: 130px; height: 130px; bottom: 15%; right: 12%; }
+    .blob-3 { width: 80px; height: 80px; top: 55%; left: 55%; }
+
+    .hero-content { position: relative; z-index: 1; max-width: 620px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .78rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--green-700);
+      background: var(--green-50);
+      border: 1px solid var(--green-100);
+      padding: 5px 14px; border-radius: 100px;
+      margin-bottom: 22px;
+    }
+    .hero-badge span { width: 7px; height: 7px; border-radius: 50%; background: var(--green-500); }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1.13;
+      color: var(--gray-900);
+      margin-bottom: 18px;
+    }
+    .hero-title em { font-style: normal; color: var(--green-500); }
+    .hero-sub {
+      font-size: 1.05rem; font-weight: 300;
+      color: var(--gray-500);
+      max-width: 520px;
+      margin-bottom: 36px;
+      line-height: 1.75;
+    }
+    .hero-cta {
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 28px;
+      border-radius: 100px;
+      font-family: var(--font-body); font-size: .9rem; font-weight: 600;
+      cursor: pointer; border: none;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .btn-primary {
+      background: var(--green-500); color: var(--white);
+      box-shadow: 0 4px 18px rgba(58,171,68,.28);
+    }
+    .btn-primary:hover { background: var(--green-700); }
+    .btn-outline {
+      background: transparent; color: var(--green-700);
+      border: 1.5px solid var(--green-300);
+    }
+    .btn-outline:hover { background: var(--green-50); }
+
+    .hero-stats {
+      display: flex; gap: 40px; margin-top: 56px;
+      flex-wrap: wrap;
+    }
+    .stat { display: flex; flex-direction: column; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      color: var(--green-700);
+    }
+    .stat-label { font-size: .8rem; color: var(--gray-500); font-weight: 500; }
+
+    /* ─── Page Header ──────────────────────────────────── */
+    .page-header {
+      background: linear-gradient(135deg, var(--green-700) 0%, var(--green-500) 100%);
+      color: var(--white);
+      padding: 60px 8% 52px;
+      position: relative; overflow: hidden;
+    }
+    .page-header::after {
+      content: '';
+      position: absolute; right: -60px; top: -60px;
+      width: 300px; height: 300px; border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+    .page-header::before {
+      content: '';
+      position: absolute; left: -40px; bottom: -80px;
+      width: 220px; height: 220px; border-radius: 50%;
+      background: rgba(255,255,255,.04);
+    }
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .page-header p {
+      font-size: 1rem; opacity: .85; max-width: 600px;
+      font-weight: 300;
+    }
+
+    /* ─── Container ────────────────────────────────────── */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 8%;
+    }
+
+    /* ─── Cards & Grid ─────────────────────────────────── */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px 28px 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--green-100);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .card-icon {
+      width: 48px; height: 48px;
+      background: var(--green-50);
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .card-icon svg { width: 26px; height: 26px; color: var(--green-500); }
+    .card h3 {
+      font-family: var(--font-display);
+      font-size: 1.15rem; margin-bottom: 8px;
+      color: var(--gray-900);
+    }
+    .card p { font-size: .9rem; color: var(--gray-500); line-height: 1.7; }
+
+    /* ─── Section title ────────────────────────────────── */
+    .section-label {
+      font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--green-500); margin-bottom: 8px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--gray-900); margin-bottom: 12px;
+    }
+    .section-desc { font-size: 1rem; color: var(--gray-500); max-width: 600px; line-height: 1.75; margin-bottom: 40px; }
+
+    /* ─── Domain page ──────────────────────────────────── */
+    .domain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .domain-block {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 24px;
+      border-left: 4px solid var(--green-500);
+      box-shadow: 0 2px 14px rgba(30,80,30,.06);
+    }
+    .domain-block h3 {
+      font-family: var(--font-display); font-size: 1.08rem;
+      color: var(--green-700); margin-bottom: 10px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .domain-block p { font-size: .88rem; color: var(--gray-500); line-height: 1.7; }
+
+    .tech-pills { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 32px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 16px;
+      background: var(--green-50);
+      border: 1px solid var(--green-100);
+      border-radius: 100px;
+      font-size: .82rem; font-weight: 600; color: var(--green-700);
+    }
+
+    /* ─── Milestones ───────────────────────────────────── */
+    .milestone-item {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 0;
+      box-shadow: 0 2px 12px rgba(30,80,30,.06);
+      border: 1px solid var(--green-100);
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .milestone-header {
+      padding: 20px 24px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: space-between;
+      user-select: none;
+      transition: background .2s;
+    }
+    .milestone-header:hover { background: var(--green-50); }
+    .milestone-header-left { display: flex; align-items: center; gap: 16px; }
+    .milestone-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--green-500); color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: .85rem; flex-shrink: 0;
+    }
+    .milestone-header h3 { font-size: 1rem; font-weight: 600; color: var(--gray-900); }
+    .milestone-meta { font-size: .8rem; color: var(--gray-500); margin-top: 2px; }
+    .milestone-chevron {
+      transition: transform .3s;
+      color: var(--gray-500);
+    }
+    .milestone-chevron.open { transform: rotate(180deg); }
+    .milestone-body {
+      padding: 0 24px;
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s ease, padding .35s ease;
+    }
+    .milestone-body.open {
+      max-height: 400px;
+      padding: 0 24px 20px;
+    }
+    .milestone-body p { font-size: .88rem; color: var(--gray-500); line-height: 1.7; }
+
+    /* ─── Documents ────────────────────────────────────── */
+    .doc-item {
+      display: flex; align-items: center; gap: 16px;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: 0 2px 10px rgba(30,80,30,.05);
+      border: 1px solid var(--green-100);
+      margin-bottom: 12px;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .doc-item:hover { transform: translateX(4px); box-shadow: var(--shadow); }
+    .doc-icon {
+      width: 42px; height: 42px;
+      background: var(--green-50);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .doc-icon svg { width: 22px; height: 22px; color: var(--green-500); }
+    .doc-info h4 { font-size: .95rem; font-weight: 600; color: var(--gray-900); }
+    .doc-info p { font-size: .8rem; color: var(--gray-500); }
+    .doc-status {
+      margin-left: auto;
+      font-size: .75rem; font-weight: 700;
+      padding: 4px 12px; border-radius: 100px;
+    }
+    .doc-status.available { background: var(--green-50); color: var(--green-700); }
+    .doc-status.pending { background: #fff8e1; color: #b08000; }
+
+    /* ─── Presentations ────────────────────────────────── */
+    .slide-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--green-100);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .slide-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .slide-thumb {
+      background: linear-gradient(135deg, var(--green-700) 0%, var(--green-300) 100%);
+      height: 140px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .slide-thumb::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 20px,
+        rgba(255,255,255,.04) 20px, rgba(255,255,255,.04) 40px
+      );
+    }
+    .slide-thumb svg { width: 48px; height: 48px; color: rgba(255,255,255,.7); position: relative; z-index: 1; }
+    .slide-body { padding: 20px; }
+    .slide-body h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+    .slide-body p { font-size: .82rem; color: var(--gray-500); }
+    .slide-footer {
+      padding: 12px 20px;
+      border-top: 1px solid var(--green-100);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .slide-date { font-size: .78rem; color: var(--gray-500); }
+    .slide-link {
+      font-size: .82rem; font-weight: 600; color: var(--green-500);
+      display: flex; align-items: center; gap: 4px;
+    }
+
+    /* ─── About ────────────────────────────────────────── */
+    .member-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 28px 24px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--green-100);
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .member-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .member-avatar {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-300), var(--green-500));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; font-weight: 700; color: var(--white);
+      margin-bottom: 16px;
+      font-family: var(--font-display);
+    }
+    .member-card h3 { font-family: var(--font-display); font-size: 1.1rem; margin-bottom: 4px; }
+    .member-role {
+      font-size: .8rem; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+      color: var(--green-500); margin-bottom: 12px;
+    }
+    .member-email {
+      font-size: .85rem; color: var(--gray-500);
+      display: flex; align-items: center; gap: 5px;
+    }
+    .member-email svg { width: 14px; height: 14px; }
+
+    /* ─── Supervisor ───────────────────────────────────── */
+    .supervisor-block {
+      background: linear-gradient(135deg, var(--green-50) 0%, var(--white) 100%);
+      border: 1px solid var(--green-100);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      display: flex; gap: 24px; align-items: center;
+      margin-top: 40px;
+    }
+    .supervisor-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--green-700);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; font-weight: 700; color: var(--white);
+      font-family: var(--font-display); flex-shrink: 0;
+    }
+    .supervisor-info h3 { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 4px; }
+    .supervisor-info p { font-size: .88rem; color: var(--gray-500); }
+
+    /* ─── Contact ──────────────────────────────────────── */
+    .contact-form {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--green-100);
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block; font-size: .85rem; font-weight: 600;
+      color: var(--gray-700); margin-bottom: 6px;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius);
+      font-family: var(--font-body); font-size: .9rem;
+      color: var(--gray-900);
+      background: var(--off-white);
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: var(--green-500);
+      box-shadow: 0 0 0 3px rgba(58,171,68,.12);
+      background: var(--white);
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .contact-info-block {
+      display: flex; flex-direction: column; gap: 18px;
+    }
+    .contact-info-item {
+      display: flex; align-items: flex-start; gap: 16px;
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(30,80,30,.05);
+      border: 1px solid var(--green-100);
+    }
+    .contact-info-icon {
+      width: 42px; height: 42px; border-radius: var(--radius);
+      background: var(--green-50);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-info-icon svg { width: 20px; height: 20px; color: var(--green-500); }
+    .contact-info-item h4 { font-size: .85rem; font-weight: 700; color: var(--gray-700); margin-bottom: 2px; }
+    .contact-info-item p { font-size: .85rem; color: var(--gray-500); }
+
+    /* ─── Performance table ────────────────────────────── */
+    .perf-table {
+      width: 100%; border-collapse: collapse;
+      font-size: .88rem;
+    }
+    .perf-table th {
+      background: var(--green-700); color: var(--white);
+      padding: 12px 16px; text-align: left;
+      font-weight: 600;
+    }
+    .perf-table th:first-child { border-radius: var(--radius) 0 0 0; }
+    .perf-table th:last-child { border-radius: 0 var(--radius) 0 0; }
+    .perf-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--green-100);
+      color: var(--gray-700);
+    }
+    .perf-table tr:nth-child(even) td { background: var(--green-50); }
+    .perf-table tr:last-child td { border-bottom: none; }
+    .perf-table .highlight td { font-weight: 700; color: var(--green-700); }
+    .table-wrap {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--green-100);
+      margin-bottom: 28px;
+    }
+    .table-title {
+      padding: 16px 20px;
+      font-size: .88rem; font-weight: 700;
+      color: var(--gray-700);
+      border-bottom: 1px solid var(--green-100);
+      background: var(--green-50);
+    }
+
+    /* ─── Divider ──────────────────────────────────────── */
+    .divider { border: none; border-top: 1px solid var(--green-100); margin: 0; }
+
+    /* ─── Footer ───────────────────────────────────────── */
+    footer {
+      background: var(--gray-900);
+      color: rgba(255,255,255,.55);
+      text-align: center;
+      padding: 28px 5%;
+      font-size: .82rem;
+    }
+    footer span { color: var(--green-300); }
+
+    /* ─── Animations ───────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate { animation: fadeUp .5s ease both; }
+    .delay-1 { animation-delay: .1s; }
+    .delay-2 { animation-delay: .2s; }
+    .delay-3 { animation-delay: .3s; }
+
+    /* ─── Responsive ───────────────────────────────────── */
+    @media (max-width: 768px) {
+      .nav-links a { padding: 5px 10px; font-size: .8rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .supervisor-block { flex-direction: column; }
+      .hero { padding: 48px 6%; }
+      .hero-decoration { display: none; }
+      .container { padding: 40px 6%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══════════════════════════════════════ -->
+<nav id="main-nav">
+  <div class="nav-brand" onclick="showSection('home')" style="cursor:pointer">
+    <div class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V12M12 12C12 7 7 4 2 5c0 5 3 9 10 7M12 12c0-5 5-8 10-7-1 5-4 9-10 7"/></svg>
+    </div>
+    <span class="nav-title">AgriVision</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#" onclick="showSection('home')" id="nav-home" class="active">Home</a></li>
+    <li><a href="#" onclick="showSection('domain')" id="nav-domain">Domain</a></li>
+    <li><a href="#" onclick="showSection('milestones')" id="nav-milestones">Milestones</a></li>
+    <li><a href="#" onclick="showSection('documents')" id="nav-documents">Documents</a></li>
+    <li><a href="#" onclick="showSection('slides')" id="nav-slides">Slides</a></li>
+    <li><a href="#" onclick="showSection('about')" id="nav-about">About Us</a></li>
+    <li><a href="#" onclick="showSection('contact')" id="nav-contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ═══ HOME ═══════════════════════════════════════════════ -->
+<section id="home" class="active">
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-decoration"><div class="hero-decoration-inner"></div></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="hero-content">
+      <div class="hero-badge animate"><span></span> Final Year Research Project · 2024/25</div>
+      <h1 class="hero-title animate delay-1">
+        <em>AgriVision</em><br>AI Driven Ecosystem<br>For Scotch Bonnet<br>Cultivation
+      </h1>
+      <p class="hero-sub animate delay-2">
+        An integrated AI-powered platform combining computer vision, deep learning, and precision agriculture to help small-scale Scotch Bonnet farmers monitor plant health, grade produce quality, and optimize planting strategies.
+      </p>
+      <div class="hero-cta animate delay-3">
+        <button class="btn btn-primary" onclick="showSection('domain')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Explore Research
+        </button>
+        <button class="btn btn-outline" onclick="showSection('about')">Meet the Team</button>
+      </div>
+      <div class="hero-stats animate delay-3">
+        <div class="stat"><span class="stat-num">95%</span><span class="stat-label">Disease Classification Accuracy</span></div>
+        <div class="stat"><span class="stat-num">96.4%</span><span class="stat-label">Object Detection mAP@50</span></div>
+        <div class="stat"><span class="stat-num">3</span><span class="stat-label">Integrated AI Modules</span></div>
+        <div class="stat"><span class="stat-num">4</span><span class="stat-label">Team Members</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section-label">What We Built</div>
+    <h2 class="section-title">Three AI-Powered Modules</h2>
+    <p class="section-desc">AgriVision unifies plant health monitoring, produce quality grading, and adaptive planting advisory into one mobile-friendly ecosystem for Scotch Bonnet farmers.</p>
+
+    <div class="grid-3">
+      <div class="card animate">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h3>Plant Monitoring & Recommendation</h3>
+        <p>Detect diseases early, track plant growth with ArUco marker-based height measurement, and receive custom growing recommendations based on environmental data.</p>
+      </div>
+      <div class="card animate delay-1">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2v-4M9 21H5a2 2 0 01-2-2v-4m0 0h18"/></svg>
+        </div>
+        <h3>Quality Grading & Visual Sorting</h3>
+        <p>Automatically classify batches of up to 50 Scotch Bonnet peppers into Grades A–D using color and surface blemish detection via YOLOv8 segmentation.</p>
+      </div>
+      <div class="card animate delay-2">
+        <div class="card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Adaptive Layout & Advisory System</h3>
+        <p>Map field boundaries via GPS, classify soil fertility using Random Forest, compute optimal plant spacing and density, and predict expected yield.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DOMAIN ══════════════════════════════════════════════ -->
+<section id="domain">
+  <div class="page-header">
+    <h1>Domain</h1>
+    <p>Literature survey, research gap, problem statement, objectives, methodology, and technologies used.</p>
+  </div>
+  <div class="container">
+
+    <div class="section-label">Background</div>
+    <h2 class="section-title">Literature Survey</h2>
+    <p class="section-desc">Recent advances in deep learning and computer vision have dramatically improved agricultural monitoring. This research builds on that foundation to address gaps specific to Scotch Bonnet cultivation.</p>
+
+    <div class="domain-grid">
+      <div class="domain-block">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          Plant Disease Detection
+        </h3>
+        <p>CNNs including YOLO-family models and U-Net segmentation have been widely applied to leaf-level disease classification. However, most existing systems focus only on classification and lack severity estimation or stage progression analysis.</p>
+      </div>
+      <div class="domain-block">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Growth Monitoring
+        </h3>
+        <p>Image-based phenotyping with deep learning can extract plant traits like height and structure. Most systems operate under controlled conditions and are rarely integrated into real farming environments.</p>
+      </div>
+      <div class="domain-block">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          Quality Grading
+        </h3>
+        <p>Deep learning models are used to sort fruits by size, shape, color, and defects. Limited research specifically targets color and blemish-based grading for crops like Scotch Bonnet peppers.</p>
+      </div>
+      <div class="domain-block">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12C12 7 7 4 2 5c0 5 3 9 10 7M12 12c0-5 5-8 10-7-1 5-4 9-10 7"/></svg>
+          Precision Agriculture
+        </h3>
+        <p>Random Forest classifiers excel at soil fertility classification using NPK, pH and moisture features. Variable spacing and plant density optimization improve field performance and sustainability.</p>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin: 40px 0;">
+
+    <div class="grid-2">
+      <div>
+        <div class="section-label">Gap Identified</div>
+        <h2 class="section-title" style="font-size:1.6rem">Research Gap</h2>
+        <div class="domain-block" style="border-left-color: #e05252;">
+          <h3 style="color:#c0392b">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            Identified Gaps
+          </h3>
+          <p>No existing system integrates disease detection, growth monitoring, quality grading, and planting advisory into a single platform. Disease severity and comparative growth benchmarking against peer plants are largely absent from prior work.</p>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Core Problem</div>
+        <h2 class="section-title" style="font-size:1.6rem">Research Problem</h2>
+        <div class="domain-block">
+          <h3>How can AI-based tools improve Scotch Bonnet farming?</h3>
+          <p>Small-scale Scotch Bonnet farmers in Sri Lanka rely on manual observation, leading to late disease detection, inconsistent quality assessment, and poor planting decisions. A unified, mobile-accessible AI system can bridge these gaps.</p>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin: 40px 0;">
+
+    <div class="section-label">Goals</div>
+    <h2 class="section-title">Research Objectives</h2>
+    <div class="grid-3" style="margin-bottom:40px;">
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+        <h3>Objective 01</h3>
+        <p>Build an image-based pipeline for disease detection and severity estimation on Scotch Bonnet leaves using EfficientNetB0 and U-Net.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18.4 7.8l-8.5 8.5-3.9-3.9"/></svg></div>
+        <h3>Objective 02</h3>
+        <p>Develop a real-time growth monitoring module using ArUco markers and YOLOv8 to track plant height and growth stage over time.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+        <h3>Objective 03</h3>
+        <p>Create an automated quality grading system classifying peppers into four grades based on color and blemish analysis via YOLOv8 segmentation.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12C12 7 7 4 2 5c0 5 3 9 10 7M12 12c0-5 5-8 10-7-1 5-4 9-10 7"/></svg></div>
+        <h3>Objective 04</h3>
+        <p>Implement an adaptive planting advisory using GPS field mapping, Random Forest soil classification, and yield prediction for optimal plant density.</p>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin-bottom:40px;">
+
+    <div class="section-label">How It Works</div>
+    <h2 class="section-title">Methodology</h2>
+    <p class="section-desc">A systematic approach integrating mobile image capture, deep learning pipelines, and rule-based advisory for real-world farming conditions.</p>
+
+    <div class="grid-2" style="margin-bottom:40px;">
+      <div class="domain-block">
+        <h3>Disease Detection Pipeline</h3>
+        <p>YOLOv8 detects and isolates individual leaves → EfficientNetB0 classifies disease type (Healthy / Cercospora / Bacterial) → U-Net performs pixel-level segmentation to compute severity ratio: Diseased Area / Total Leaf Area × 100.</p>
+      </div>
+      <div class="domain-block">
+        <h3>Growth Monitoring</h3>
+        <p>ArUco markers (5×5 cm) provide a physical reference scale. Plant height is derived from pixel measurements. Growth rate = (H_Current − H_Previous) / Δt, benchmarked against well-performing plants in the same growth stage.</p>
+      </div>
+      <div class="domain-block">
+        <h3>Quality Grading</h3>
+        <p>YOLOv8-seg detects and segments individual peppers in batch images (up to 50 per image). Grading uses color (green/yellow/orange-red) and surface defect detection → Grade A, B, C, or D.</p>
+      </div>
+      <div class="domain-block">
+        <h3>Adaptive Layout</h3>
+        <p>GPS boundary traversal → polygon area calculation. Soil vector [N, P, K, pH, Moisture] → Random Forest classifies fertility (Rich/Medium/Poor) → adaptive intra-row spacing (S_i) → Plant density D = 1/(S_i × 0.75). Yield predicted via RF regression trained on 500 records.</p>
+      </div>
+    </div>
+
+    <div class="section-label">Tech Stack</div>
+    <h2 class="section-title">Technologies Used</h2>
+    <div class="tech-pills">
+      <span class="pill">YOLOv8</span>
+      <span class="pill">EfficientNetB0</span>
+      <span class="pill">U-Net</span>
+      <span class="pill">Random Forest</span>
+      <span class="pill">Python</span>
+      <span class="pill">TensorFlow / Keras</span>
+      <span class="pill">PyTorch</span>
+      <span class="pill">OpenCV</span>
+      <span class="pill">ArUco Markers</span>
+      <span class="pill">GPS Geospatial Mapping</span>
+      <span class="pill">Supabase</span>
+      <span class="pill">Google Colab</span>
+      <span class="pill">Flutter (Mobile)</span>
+      <span class="pill">FastAPI</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MILESTONES ══════════════════════════════════════════ -->
+<section id="milestones">
+  <div class="page-header">
+    <h1>Milestones</h1>
+    <p>All project assessments with dates and marks allocation.</p>
+  </div>
+  <div class="container">
+    <div class="section-label">Progress Tracker</div>
+    <h2 class="section-title">Project Assessments</h2>
+    <p class="section-desc">Click on any milestone to view details about the assessment.</p>
+
+    <div id="milestones-list"></div>
+  </div>
+</section>
+
+<!-- ═══ DOCUMENTS ═══════════════════════════════════════════ -->
+<section id="documents">
+  <div class="page-header">
+    <h1>Documents</h1>
+    <p>All project documents produced and pending for download or viewing.</p>
+  </div>
+  <div class="container">
+    <div class="section-label">Project Files</div>
+    <h2 class="section-title">Document Repository</h2>
+
+    <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--green-700);margin-bottom:16px;margin-top:32px;">Project Charter & Proposal</h3>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="doc-info"><h4>Project Charter</h4><p>Scope, objectives and team agreements</p></div>
+      <span class="doc-status available">Available</span>
+    </div>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+      <div class="doc-info"><h4>Project Proposal Document</h4><p>Full research proposal with literature review</p></div>
+      <span class="doc-status available">Available</span>
+    </div>
+
+    <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--green-700);margin-bottom:16px;margin-top:32px;">Check Lists</h3>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <div class="doc-info"><h4>Progress Presentation-1 Checklist</h4><p>Milestone 2 evaluation checklist</p></div>
+      <span class="doc-status available">Available</span>
+    </div>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+      <div class="doc-info"><h4>Progress Presentation-2 Checklist</h4><p>Milestone 3 evaluation checklist</p></div>
+      <span class="doc-status available">Available</span>
+    </div>
+
+    <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--green-700);margin-bottom:16px;margin-top:32px;">Final Documents</h3>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <div class="doc-info"><h4>Final Report – Main</h4><p>Comprehensive project documentation</p></div>
+      <span class="doc-status pending">Pending</span>
+    </div>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <div class="doc-info"><h4>Final Report – Member 01</h4><p>Plant Monitoring & Recommendation component</p></div>
+      <span class="doc-status pending">Pending</span>
+    </div>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <div class="doc-info"><h4>Final Report – Member 02</h4><p>Quality Grading & Visual Sorting component</p></div>
+      <span class="doc-status pending">Pending</span>
+    </div>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+      <div class="doc-info"><h4>Final Report – Member 03 & 04</h4><p>Adaptive Layout & Advisory System component</p></div>
+      <span class="doc-status pending">Pending</span>
+    </div>
+
+    <h3 style="font-family:var(--font-display);font-size:1.1rem;color:var(--green-700);margin-bottom:16px;margin-top:32px;">Research Paper</h3>
+    <div class="doc-item">
+      <div class="doc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg></div>
+      <div class="doc-info"><h4>AgriVision Research Paper</h4><p>Conference / journal submission</p></div>
+      <span class="doc-status available">Available</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SLIDES ══════════════════════════════════════════════ -->
+<section id="slides">
+  <div class="page-header">
+    <h1>Presentations</h1>
+    <p>Slides used in all past and future presentations.</p>
+  </div>
+  <div class="container">
+    <div class="section-label">Slide Decks</div>
+    <h2 class="section-title">Presentation Archive</h2>
+
+    <div class="grid-3">
+      <div class="slide-card">
+        <div class="slide-thumb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="slide-body">
+          <h3>Project Proposal</h3>
+          <p>Initial presentation of research concept, problem statement, and proposed methodology.</p>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-date">Semester 7</span>
+          <span class="slide-link">View <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </div>
+      <div class="slide-card">
+        <div class="slide-thumb" style="background:linear-gradient(135deg,var(--green-500) 0%,var(--green-300) 100%)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="slide-body">
+          <h3>Progress Presentation 1</h3>
+          <p>Data collection, model training progress, and early results from disease detection component.</p>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-date">Semester 7</span>
+          <span class="slide-link">View <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </div>
+      <div class="slide-card">
+        <div class="slide-thumb" style="background:linear-gradient(135deg,#3a7c8a 0%,var(--green-300) 100%)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="slide-body">
+          <h3>Progress Presentation 2</h3>
+          <p>Full system integration, performance benchmarks, and quality grading module evaluation.</p>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-date">Semester 8</span>
+          <span class="slide-link">View <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+        </div>
+      </div>
+      <div class="slide-card" style="opacity:.7">
+        <div class="slide-thumb" style="background:linear-gradient(135deg,var(--gray-500) 0%,var(--gray-300) 100%)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <div class="slide-body">
+          <h3>Final Presentation</h3>
+          <p>Comprehensive final demonstration of the complete AgriVision ecosystem and results.</p>
+        </div>
+        <div class="slide-footer">
+          <span class="slide-date">Semester 8 · Upcoming</span>
+          <span class="slide-link" style="color:var(--gray-500)">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ════════════════════════════════════════════════ -->
+<section id="about">
+  <div class="page-header">
+    <h1>About Us</h1>
+    <p>Meet the team behind AgriVision.</p>
+  </div>
+  <div class="container">
+    <div class="section-label">The Team</div>
+    <h2 class="section-title">Group Members</h2>
+    <p class="section-desc">A four-member final year undergraduate group from the Faculty of Computing, SLIIT, passionate about applying AI to solve real-world agricultural challenges.</p>
+
+    <div class="grid-3" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+      <div class="member-card">
+        <div class="member-avatar">IM</div>
+        <h3>Ishan madusanka</h3>
+        <p class="member-role">Team Lead · Plant Monitoring</p>
+        <p class="member-email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> it22540744@my.sliit.lk</p>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#4CAF50,#2e8b57)">HF</div>
+        <h3>Hiran Fonseka</h3>
+        <p class="member-role">Quality Grading Module</p>
+        <p class="member-email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> it22630384@my.sliit.lk</p>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#81C784,#388e3c)">SG</div>
+        <h3>Shaini Gunawickrama</h3>
+        <p class="member-role">Adaptive Layout System</p>
+        <p class="member-email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> it22032324@my.sliit.lk</p>
+      </div>
+      <div class="member-card">
+        <div class="member-avatar" style="background:linear-gradient(135deg,#a5d6a7,#1b5e20)">YK</div>
+        <h3>Yasasi Kariyawasam</h3>
+        <p class="member-role">Advisory & Mobile App</p>
+        <p class="member-email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> it22011398@my.sliit.lk</p>
+      </div>
+    </div>
+
+    <div class="supervisor-block">
+      <div class="supervisor-avatar">S</div>
+      <div class="supervisor-info">
+        <p style="font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--green-500);margin-bottom:4px;">Supervisor</p>
+        <h3>Ms. Thili Perera</h3>
+        <p>Department of Information Technology, Faculty of Computing · Sri Lanka Institute of Information Technology (SLIIT)</p>
+        <p style="margin-top:6px;">thilini@sliit.lk</p>
+      </div>
+    </div>
+
+    <hr class="divider" style="margin:48px 0 40px;">
+
+    <div class="section-label">Performance</div>
+    <h2 class="section-title">Model Results</h2>
+    <p class="section-desc">Evaluation of proposed models against standard baselines across all three system components.</p>
+
+    <div class="table-wrap">
+      <div class="table-title">Table I – Disease Classification Performance</div>
+      <table class="perf-table">
+        <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th></tr></thead>
+        <tbody>
+          <tr><td>MobileNetV2</td><td>89.2%</td><td>88.5%</td><td>88.9%</td></tr>
+          <tr><td>ResNet50</td><td>92.1%</td><td>91.6%</td><td>91.8%</td></tr>
+          <tr class="highlight"><td>EfficientNetB0 (Proposed)</td><td>95.0%</td><td>94.3%</td><td>94.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Table II – Object Detection Performance</div>
+      <table class="perf-table">
+        <thead><tr><th>Model</th><th>mAP@50</th><th>Precision</th><th>Recall</th></tr></thead>
+        <tbody>
+          <tr><td>YOLOv5</td><td>91.3%</td><td>90.7%</td><td>90.9%</td></tr>
+          <tr class="highlight"><td>YOLOv8 (Proposed)</td><td>96.4%</td><td>95.8%</td><td>95.9%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Table III – Segmentation Performance</div>
+      <table class="perf-table">
+        <thead><tr><th>Model</th><th>IoU</th><th>Accuracy</th></tr></thead>
+        <tbody>
+          <tr><td>FCN</td><td>82.5%</td><td>84.1%</td></tr>
+          <tr class="highlight"><td>U-Net (Proposed)</td><td>89.0%</td><td>91.2%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ══════════════════════════════════════════════ -->
+<section id="contact">
+  <div class="page-header">
+    <h1>Contact Us</h1>
+    <p>Get in touch with the AgriVision team.</p>
+  </div>
+  <div class="container">
+    <div class="grid-2" style="align-items:start;">
+      <div class="contact-form">
+        <div class="section-label" style="margin-bottom:16px">Send a Message</div>
+        <div class="form-row">
+          <div class="form-group"><label>First Name</label><input type="text" placeholder="e.g. John"></div>
+          <div class="form-group"><label>Last Name</label><input type="text" placeholder="e.g. Doe"></div>
+        </div>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@example.com"></div>
+        <div class="form-group"><label>Subject</label><input type="text" placeholder="Brief subject"></div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Your message here…"></textarea></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;" onclick="alert('Thank you for your message! We will get back to you soon.')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Message
+        </button>
+      </div>
+
+      <div class="contact-info-block">
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22V12M12 12C12 7 7 4 2 5c0 5 3 9 10 7M12 12c0-5 5-8 10-7-1 5-4 9-10 7"/></svg></div>
+          <div><h4>Project Name</h4><p>AgriVision – AI Driven Ecosystem For Scotch Bonnet Cultivation</p></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div><h4>Institution</h4><p>Sri Lanka Institute of Information Technology (SLIIT)<br>Faculty of Computing</p></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <div><h4>Email</h4><p>agrivision.team@gmail.com</p></div>
+        </div>
+        <div class="contact-info-item">
+          <div class="contact-info-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <div><h4>Project Website</h4><p>Hosted on the SLIIT CDAP platform</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════════ -->
+<footer>
+  <p>© 2026 <span>AgriVision</span> · Final Year Research Project · SLIIT Faculty of Computing · All rights reserved.</p>
+</footer>
+
+<!-- ═══ SCRIPTS ══════════════════════════════════════════════ -->
+<script>
+  // ── Section navigation ──────────────────────────────────
+  function showSection(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const nav = document.getElementById('nav-' + id);
+    if (nav) nav.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return false;
+  }
+
+  // ── Milestones accordion ─────────────────────────────────
+  const milestones = [
+    {
+      num: '01', title: 'Project Proposal',
+      date: 'Semester 7 – Week 8', marks: '10%',
+      desc: 'Initial submission presenting the research problem, literature review, proposed methodology, and scope of the AgriVision system. Includes a presentation and written proposal document.'
+    },
+    {
+      num: '02', title: 'Progress Presentation 1',
+      date: 'Semester 7 – Week 16', marks: '15%',
+      desc: 'First evaluation of development progress. Demonstrated early results from the disease detection pipeline (YOLOv8 + EfficientNetB0) and initial data collection methodology using real-world Scotch Bonnet images.'
+    },
+    {
+      num: '03', title: 'Progress Presentation 2',
+      date: 'Semester 8 – Week 8', marks: '20%',
+      desc: 'Second evaluation covering system integration. All three modules were demonstrated: plant monitoring with growth tracking, quality grading of pepper batches, and adaptive planting advisory with soil analysis.'
+    },
+    {
+      num: '04', title: 'Final Assessment',
+      date: 'Semester 8 – Week 16', marks: '40%',
+      desc: 'Comprehensive final submission and demonstration of the complete AgriVision ecosystem. Includes the final research paper, full source code, complete documentation, and live system demonstration.'
+    },
+    {
+      num: '05', title: 'Viva',
+      date: 'Semester 8 – End of Year', marks: '15%',
+      desc: 'Individual oral examination where each team member demonstrates deep understanding of their component, the models used, results achieved, and future improvements to the AgriVision system.'
+    }
+  ];
+
+  const list = document.getElementById('milestones-list');
+  milestones.forEach((m, i) => {
+    const el = document.createElement('div');
+    el.className = 'milestone-item';
+    el.innerHTML = `
+      <div class="milestone-header" onclick="toggleMilestone(${i})">
+        <div class="milestone-header-left">
+          <div class="milestone-num">${m.num}</div>
+          <div>
+            <h3>${m.title}</h3>
+            <p class="milestone-meta">${m.date} &nbsp;·&nbsp; Marks: ${m.marks}</p>
+          </div>
+        </div>
+        <svg class="milestone-chevron" id="chev-${i}" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="milestone-body" id="body-${i}">
+        <p>${m.desc}</p>
+      </div>`;
+    list.appendChild(el);
+  });
+
+  function toggleMilestone(i) {
+    const body = document.getElementById('body-' + i);
+    const chev = document.getElementById('chev-' + i);
+    body.classList.toggle('open');
+    chev.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
